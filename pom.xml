@@ -8,11 +8,11 @@
     <relativePath/> 
   </parent>
   <groupId>com.example</groupId>
-  <artifactId>kalix-trail-shoppingcart</artifactId>
+  <artifactId>kalix-trial-shoppingcart</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>kalix-trail-shoppingcart</name>
+  <name>kalix-trial-shoppingcart</name>
   <properties>
 
     <!-- TODO Update to your own Docker repository or Docker Hub scope -->

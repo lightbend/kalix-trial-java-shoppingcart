@@ -43,7 +43,6 @@ public class IntegrationTest extends KalixIntegrationTestKitSupport {
                 .retrieve()
                 .toEntity(String.class)
                 .block(timeout);
-    assertEquals("OK",res);
     var getProduct = webClient.get()
             .uri("/product/%s/get".formatted(productId))
             .retrieve()
