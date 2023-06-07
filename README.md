@@ -109,10 +109,10 @@ Create ProductStock `Java record` in `com.example.shoppingcart package`.<br>
 Add helper methods for creating `empty` product stock structure and to validate if `isEmpty`.
 ```
 public record ProductStock(Integer quantity){
-    @JsonIgnore
     public static ProductStock empty(){
         return new ProductStock(null);
     }
+    @JsonIgnore
     public boolean isEmpty(){
         return quantity == null;
     }
