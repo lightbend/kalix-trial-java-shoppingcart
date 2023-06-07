@@ -12,7 +12,7 @@ In this exercise focus is on implementing Product Stock functionalities
 Data model:
 - quantity
 
-`Note`: Product stock data model does not hold the productId because the HTTP/REST API is designed around productId itself. 
+**Note**: Product stock data model does not hold the productId because the HTTP/REST API is designed around productId itself. 
 Operations:
 - CREATE/READ/UPDATE/DELETE product stock
 
