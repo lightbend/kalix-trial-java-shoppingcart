@@ -1,26 +1,20 @@
+# Try next with this example:
+## [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
+## [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
 # Kalix Trial - eCommerce - Java
 ## Designing Kalix Services
 ### Use case 
 ![Use case](images/ecommerce-design_kalix_services.png)<br>
-eCommerce use case is a simple shopping cart example consisting of product and shopping cart.
-Product models items that are being sold and Shopping Cart models list of items customer wants to buy.<br>
-#### Product
+eCommerce use case is a simple shopping cart example consisting of product stock and shopping cart.
+Product stock models stock (simple quantity) of products that are being sold and Shopping Cart models list of products customer intends to buy.<br>
+In this exercise focus is on implementing Product Stock functionalities
+#### Product Stock
 Data model:
-- productId
-- name
 - quantity
 
+`Note`: Product stock data model does not hold the productId because the HTTP/REST API is designed around productId itself. 
 Operations:
-- CREATE/READ/UPDATE/DELETE product
-
-#### Shopping cart 
-Data model:
-- cartId
-- list of productId + quantity
-
-Operations:
-- Add product
-- Check out
+- CREATE/READ/UPDATE/DELETE product stock
 
 ### Kalix components
 Kalix components are building blocks used to abstract functionalities.<br> 
@@ -36,49 +30,44 @@ Entity:
 Kalix provides other components that are not used in this use case and more details can be found in [Kalix documentation](https://docs.kalix.io/):<br>
 ![Other Kalix components](images/ecommerce-other_components.png)<br>
 
-### Design Product Kalix service
-**Product service**
-- implements Product functionalities
+### Design Product Stock Kalix service
+**Product Stock Service**
+- implements Product Stock functionalities
 - Kalix component used: Entity
 
-![Product Kalix Service](images/ecommerce-designing-product-service.png)
+![Product Stock Kalix Service](images/ecommerce-designing-product-service.png)
 
-**Product Entity**
-- models one product instance and business logic operations over that one instance
+**ProductStock Entity**
+- models one product stock instance and business logic operations over that one instance
 
 **Data model**
-- productId
-- name
 - quantity
 
 **API**
 - HTTP/RES
 - Endpoints:
   - **Create**
-    `POST /product/{productId}/create`
+    `POST /product-stock/{productId}/create`
     
     Request (JSON):
-    - name (string)
     - quantity (int)
     
     Response (String): "OK"
   - **Read**
-    `GET /product/{productId}/get`
+    `GET /product-stock/{productId}/get`
     Request (JSON): No body
     
     Response (JSON):
-    - name (string)
     - quantity (int)
   - **Update**
-    `PUT /product/{productId}/update`
+    `PUT /product-stock/{productId}/update`
   
     Request (JSON):
-    - name (string)
     - quantity (int)
   
     Response (String): "OK"
   - **Delete**
-    `DELETE /product/{productId}/delete`
+    `DELETE /product-stock/{productId}/delete`
   
     Request (JSON): No body
   
@@ -97,7 +86,7 @@ Execute in command line:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kalix \
   -DarchetypeArtifactId=kalix-spring-boot-archetype \
-  -DarchetypeVersion=1.2.0
+  -DarchetypeVersion=1.2.1
 ```
 Use this setup:
 ```
@@ -116,129 +105,132 @@ Maven ArchType generates Maven project:
 - `it` directory with integration test example
 
 ## Define data structure
-Create Product `Java record` in `com.example.shoppingcart package`.<br> 
-Add helper methods for creating `empty` product structure and to validate if `isEmpty`.
+Create ProductStock `Java record` in `com.example.shoppingcart package`.<br> 
+Add helper methods for creating `empty` product stock structure and to validate if `isEmpty`.
 ```
-public record Product(String name, int quantity) {
-   public static Product empty(){
-       return new Product(null,0);
-   }
-   public boolean isEmpty(){
-       return name == null && quantity == 0;
-   }
+public record ProductStock(Integer quantity){
+    @JsonIgnore
+    public static ProductStock empty(){
+        return new ProductStock(null);
+    }
+    public boolean isEmpty(){
+        return quantity == null;
+    }
 }
+
 ```
-## Define API - Product Entity API
-1. Create `ProductEntity` Java class in `com.example.shoppingcart` package that `extends` `kalix.javasdk.valueentity.ValueEntity` with inner type `Product` type
+## Define API - Product Stock Entity API
+1. Create `ProductStockEntity` Java class in `com.example.shoppingcart` package that `extends` `kalix.javasdk.valueentity.ValueEntity` with inner type `ProductStock` type
 2. Add `productId` class parameter
 3. Add constructor for Kalix to inject `ValueEntityContext` from which `entityId` is used set `productId`
-4. Annotate `ProductEntity` class with spring web bind annotation `@RequestMapping` and configure path with `productId` as in-path parameter
-5. Annotate class with `@EntityKey(“productId”)` to configure entity key to `productId`
-6. Annotate class with `@EntityType` to assign reference name to the entity
-7. Override `emptyState` method and return `empty` `Product` value
+4. Annotate `ProductStockEntity` class with spring web bind annotation `@RequestMapping` and configure path with `productId` as in-path parameter
+5. Annotate class with `@EntityKey("productId")` to configure entity key to `productId`
+6. Annotate class with `@EntityType("product-stock")` to assign reference name to the entity
+7. Override `emptyState` method and return `empty` `ProductStock` value
 
 ```
 @EntityKey("productId")
-@EntityType("product")
-@RequestMapping("/product/{productId}")
-public class ProductEntity extends ValueEntity<Product>{
+@EntityType("product-stock")
+@RequestMapping("/product-stock/{productId}")
+public class ProductStockEntity extends ValueEntity<ProductStock>{
     private final String productId;
-    public ProductEntity(ValueEntityContext context) {
+    public ProductStockEntity(ValueEntityContext context) {
             this.productId = context.entityId();
     }
     @Override
-    public Product emptyState() {
-       return Product.empty();
+    public ProductStock emptyState() {
+       return ProductStock.empty();
     }
 }
+
 ```
-8. Annotate `ProductEntity` class with spring web bind annotation `@RequestMapping` and configure path with `productId` as in-path parametar
+8. Annotate `ProductStockEntity` class with spring web bind annotation `@RequestMapping` and configure path with `productId` as in-path parameter
 9. For each endpoints:
-   - To `ProductEntity` class add method per endpoint (`create`, `get`, `update`, `delete`)
+   - To `ProductStockEntity` class add method per endpoint (`create`, `get`, `update`, `delete`)
    - Each method:
      - input: HTTP request data structure (using spring web annotations)
      - return: `ValueEntity.Effect`  with HTTP response data structure as an inner type
      - using spring web annotation mappings for REST method and path mapping (`@PostMapping`,...)
 ```
 @EntityKey("productId")
-@EntityType("product")
-@RequestMapping("/product/{productId}")
-public class ProductEntity extends ValueEntity<Product>{
+@EntityType("product-stock")
+@RequestMapping("/product-stock/{productId}")
+public class ProductStockEntity extends ValueEntity<ProductStock>{
    private final String productId;
-   public ProductEntity(ValueEntityContext context) {
+   public ProductStockEntity(ValueEntityContext context) {
    		this.productId = context.entityId();
    }
    @Override
-   public Product emptyState() {
-     return Product.empty();
+   public ProductStock emptyState() {
+     return ProductStock.empty();
    }
-   
    @PostMapping("/create")
-   public Effect<String> create(@RequestBody  Product product){}
-   
+   public Effect<String> create(@RequestBody ProductStock productStock){}
    @GetMapping("/get")
-   public Effect<Product> get(){}
-   
+   public Effect<ProductStock> get(){}
    @PutMapping("/update")
-   public Effect<String> update(@RequestBody Product product){}
-   
+   public Effect<String> update(@RequestBody ProductStock productStock){}
    @DeleteMapping("/delete")
    public Effect<String> delete(){}
 }
+
 ```
 ## Implementing business logic
 Helper methods from `ValueEntity` class:
-- `currentState()` facilitates access to current value of the data for that product instance (e.g. productId: 111)
+- `currentState()` facilitates access to current value of the data for that product stock instance (e.g. productId: 111)
 - `effects()` facilitates actions that Kalix needs to perform
 - `updateState()` - to persist data
 - `thenReply()` - to send response after persistence is successful
 - `error()` - to send error response back
-- `deleteEntity` - facilitates data deletion
-- Kalix ensures that each method (create, get, update, delete) is executed in sequence for one product instance (e.g. productId: 111) ensuring consistency and resolving concurrent access
+- Kalix ensures that each method (create, get, update, delete) is executed in sequence for one product stock instance (e.g. productId: 111) ensuring consistency and resolving concurrent access.
 
 ### `create` endpoint
-Business logic for create is to persist data if not yet persistent. In other cases returns an ERROR. 
+Business logic for create is to persist product stock data if not yet exists. In other cases returns an ERROR. 
 ```
 @PostMapping("/create")
-public Effect<String> create(@RequestBody  Product product){
+public Effect<String> create(@RequestBody ProductStock productStock){
    if(currentState().isEmpty())
-       return effects().updateState(product).thenReply("OK");
+       return effects().updateState(productStock).thenReply("OK");
    else
        return effects().error("Already created");
 }
 ```
 ### `get` endpoint
-Business logic for get is to product data if exists and if not return not found error.
+Business logic for get is to product stock data if exists and if not return not found error.
 ```
 @GetMapping("/get")
-public Effect<Product> get(){
+public Effect<ProductStock> get(){
    if(currentState().isEmpty())
        return effects().error("Not found", Status.Code.NOT_FOUND);
    else
        return effects().reply(currentState());
 }
+
 ```
 ### `update` endpoint
-Business logic for update is to update product data if product was already created. If product is not found, return NOT FOUND error.
+Business logic for update is to update product stock data if product was already created. If product is not found, return NOT FOUND error.
 ```
 @PutMapping("/update")
-public Effect<String> update(@RequestBody Product product){
+public Effect<String> update(@RequestBody ProductStock productStock){
    if(currentState().isEmpty())
        return effects().error("Not found", Status.Code.NOT_FOUND);
    else
-       return effects().updateState(product).thenReply("OK");
+       return effects().updateState(productStock).thenReply("OK");
 }
+
 ```
 ### `delete` endpoint
-Business logic for delete is delete data if product exists and return NOT FOUND error if not
+Business logic for delete is delete data if product stock exists and return NOT FOUND error if not. 
+Here the soft delete is done by `emptying` the Product Stock.
 ```
 @DeleteMapping("/delete")
 public Effect<String> delete(){
    if(currentState().isEmpty())
        return effects().error("Not found", Status.Code.NOT_FOUND);
    else
-       return effects().deleteEntity().thenReply("OK");
+       return effects().updateState(ProductStock.empty()).thenReply("OK");
 }
+
 ```
 ## Test
 Kalix comes with very rich test kit for unit and integration testing of Kalix code
@@ -252,9 +244,9 @@ Kalix comes with very rich test kit for unit and integration testing of Kalix co
 ### Unit test
 1. Create a new `test/java` directories in `src` directory
 2. Create `com.example.shoppingcart` package in `test/java`
-3. Create `ProductEntityTest` class created package
+3. Create `ProductStockEntityTest` class created package
 4. Create `testCreate` method with `JUnit Jupiter Test` annotation
-5. `ValueEntityTestKit` class is used for unit testing `Value Entity` component. Inner types are `Product` and `ProductEntity`. 
+5. `ValueEntityTestKit` class is used for unit testing `Value Entity` component. Inner types are `ProductStock` and `ProductStockEntity`. 
     It is for unit testing one product instance so `productId` needs to be provided
 6. `Testkit` call method is used for triggering each entity endpoint and result is `ValueEntityResult` with inner type as a HTTP result  
 7. result can be used for test assertion
@@ -262,22 +254,22 @@ Kalix comes with very rich test kit for unit and integration testing of Kalix co
    - `getReply` - assert reply
    - `getUpdatedState` - assert persistent data
 ```
-public class ProductEntityTest {
+public class ProductStockEntityTest {
    @Test
    public void testCreate()throws Exception{
        var productId = UUID.randomUUID().toString();
-       Product product = new Product("apple",10);
+       ProductStock productStock = new ProductStock(10);
 
-       ValueEntityTestKit<Product,ProductEntity> testKit = ValueEntityTestKit.of(productId,ProductEntity::new);
+       ValueEntityTestKit<ProductStock, ProductStockEntity> testKit = ValueEntityTestKit.of(productId, ProductStockEntity::new);
 
-       ValueEntityResult<String> res = testKit.call(entity -> entity.create(product));
+       ValueEntityResult<String> res = testKit.call(entity -> entity.create(productStock));
        assertFalse(res.isError());
        assertEquals("OK",res.getReply());
-       Product persistedProduct = (Product)res.getUpdatedState();
-       assertEquals(product.name(),persistedProduct.name());
-       assertEquals(product.quantity(),persistedProduct.quantity());
+       ProductStock persistedProductStock = (ProductStock)res.getUpdatedState();
+       assertEquals(productStock.quantity(),persistedProductStock.quantity());
    }
 }
+
 ```
 Run the unit test:
 ```
@@ -296,22 +288,20 @@ public class IntegrationTest extends KalixIntegrationTestKitSupport {
  @Test
  public void test() throws Exception {
    var productId = UUID.randomUUID().toString();
-   Product product = new Product("apple",10);
+   ProductStock productStock = new ProductStock(10);
    var res = webClient.post()
-               .uri("/product/%s/create".formatted(productId))
-               .bodyValue(product)
+               .uri("/product-stock/%s/create".formatted(productId))
+               .bodyValue(productStock)
                .retrieve()
                .toEntity(String.class)
                .block(timeout);
-   assertEquals("OK",res);
-   var getProduct = webClient.get()
-           .uri("/product/%s/get".formatted(productId))
+   var getProductStock = webClient.get()
+           .uri("/product-stock/%s/get".formatted(productId))
            .retrieve()
-           .toEntity(Product.class)
+           .toEntity(ProductStock.class)
            .block(timeout)
            .getBody();
-   assertEquals(product.name(),getProduct.name());
-   assertEquals(product.quantity(),getProduct.quantity());
+   assertEquals(productStock.quantity(),getProductStock.quantity());
  }
 }
 ```
@@ -320,22 +310,139 @@ Run the integration test:
 mvn -Pit verify
 ```
 ### Run locally in prod-like environment
-TBD
+Run Kalix service locally:
+```
+mvn kalix:runAll
+```
+This command runs the Kalix service locally and exposes it on `localhost:9000`.
+#### Test
+Testing using `CURL`:
+1. Create product:
+```
+curl -XPOST -d '{ 
+  "quantity": 10
+}' http://localhost:9000/product-stock/apple/create -H "Content-Type: application/json"
+```
+Result:
+```
+"OK"
+```
+2. Get product:
+```
+curl -XGET http://localhost:9000/product-stock/apple/get
+```
+Result:
+```
+{"quantity":10}
+```
+3. Update product:
+```
+curl -XPUT -d '{
+"quantity": 20
+}' http://localhost:9000/product-stock/apple/update -H "Content-Type: application/json"
+```
+Result:
+```
+"OK"
+```
+4. Delete product:
+```
+curl -XDELETE http://localhost:9000/product-stock/apple/delete
+```
+Result:
+```
+"OK"
+```
 ### Deploy and run on Kalix Platform on Cloud Provider of your choice 
-1. Register for Kalix
-   - FREE
-   - https://console.kalix.io/register
-   - download & install CLI through registration process
-2. Create a project in cloud provider and region of choice
+1. Install Kalix CLI
+https://docs.kalix.io/setting-up/index.html#_1_install_the_kalix_cli
+2. Kalix CLI 
+   1. Register (FREE)
+    ```
+    kalix auth signup
+    ```
+    **Note**: Following command will open a browser where registration information can be filled in
+   2. Login
+    ```
+    kalix auth login
+    ```
+    **Note**: Following command will open a browser where authentication approval needs to be provided
+
+   3. Create a project
+    ```
+    kalix projects new ecommerce --region=gcp-us-east1
+    ```
+    **Note**: `gcp-is-east1` is currently the only available region for deploying trial projects. For non-trial projects you can select Cloud Provider and regions of your choice
+
+   4. Authenticate local docker for pushing docker image to Kalix docker registry
+    ```
+    kalix auth container-registry configure
+    ```
+3. Deploy service in Kalix project:
  ```
-kalix projects new ecommerce --region=gcp-us-east1
+mvn deploy kalix:deploy
+ ```
+This command will: 
+- compile the code
+- execute tests
+- package into a docker image
+- push the docker image to Kalix docker registry
+- trigger service deployment by invoking Kalix CLI
+5. Check deployment:
 ```
-3. Deploy:
+kalix service list
 ```
-mvn deploy
+Result:
 ```
-### Exercises 
-TBD
+kalix service list                                                                         
+NAME                                         AGE    REPLICAS   STATUS        IMAGE TAG                     
+kalix-trial-shoppingcart                     50s    0          Ready         1.0-SNAPSHOT                  
+```
+**Note**: When deploying service for the first time it can take up to 1 minute for internal provisioning
+#### Proxy connection to Kalix service via Kalix CLI
+1. Proxy connection to Kalix service via Kalix CLI
+```
+kalix service proxy kalix-trial-shoppingcart
+```
+Proxy Kalix CLI command will expose service proxy connection on `localhost:8080`.
+#### Test
+Testing using `CURL`:
+1. Create product:
+```
+curl -XPOST -d '{ 
+  "quantity": 10
+}' http://localhost:8080/product-stock/apple/create -H "Content-Type: application/json"
+```
+Result:
+```
+"OK"
+```
+2. Get product:
+```
+curl -XGET http://localhost:8080/product-stock/apple/get
+```
+Result:
+```
+{"quantity":10}
+```
+3. Update product:
+```
+curl -XPUT -d '{
+"quantity": 20
+}' http://localhost:8080/product-stock/apple/update -H "Content-Type: application/json"
+```
+Result:
+```
+"OK"
+```
+4. Delete product:
+```
+curl -XDELETE http://localhost:8080/product-stock/apple/delete
+```
+Result:
+```
+"OK"
+```
 
 
 

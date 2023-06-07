@@ -8,46 +8,46 @@ import kalix.javasdk.valueentity.ValueEntityContext;
 import org.springframework.web.bind.annotation.*;
 
 @EntityKey("productId")
-@EntityType("product")
-@RequestMapping("/product/{productId}")
-public class ProductEntity extends ValueEntity<Product>{
+@EntityType("product-stock")
+@RequestMapping("/product-stock/{productId}")
+public class ProductStockEntity extends ValueEntity<ProductStock>{
     private final String productId;
 
-    public ProductEntity(ValueEntityContext context) {
+    public ProductStockEntity(ValueEntityContext context) {
         this.productId = context.entityId();
     }
 
     @Override
-    public Product emptyState() {
-        return Product.empty();
+    public ProductStock emptyState() {
+        return ProductStock.empty();
     }
 
     @PostMapping("/create")
-    public Effect<String> create(@RequestBody  Product product){
+    public Effect<String> create(@RequestBody ProductStock productStock){
         if(currentState().isEmpty())
-            return effects().updateState(product).thenReply("OK");
+            return effects().updateState(productStock).thenReply("OK");
         else
             return effects().error("Already created");
     }
     @GetMapping("/get")
-    public Effect<Product> get(){
+    public Effect<ProductStock> get(){
         if(currentState().isEmpty())
             return effects().error("Not found", Status.Code.NOT_FOUND);
         else
             return effects().reply(currentState());
     }
     @PutMapping("/update")
-    public Effect<String> update(@RequestBody Product product){
+    public Effect<String> update(@RequestBody ProductStock productStock){
         if(currentState().isEmpty())
             return effects().error("Not found", Status.Code.NOT_FOUND);
         else
-            return effects().updateState(product).thenReply("OK");
+            return effects().updateState(productStock).thenReply("OK");
     }
     @DeleteMapping("/delete")
     public Effect<String> delete(){
         if(currentState().isEmpty())
             return effects().error("Not found", Status.Code.NOT_FOUND);
         else
-            return effects().deleteEntity().thenReply("OK");
+            return effects().updateState(ProductStock.empty()).thenReply("OK");
     }
 }

@@ -1,9 +1,7 @@
 package com.example.shoppingcart;
 
-import com.example.shoppingcart.Main;
 import kalix.spring.testkit.KalixIntegrationTestKitSupport;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +34,19 @@ public class IntegrationTest extends KalixIntegrationTestKitSupport {
   @Test
   public void test() throws Exception {
     var productId = UUID.randomUUID().toString();
-    Product product = new Product("apple",10);
+    ProductStock productStock = new ProductStock(10);
     var res = webClient.post()
-                .uri("/product/%s/create".formatted(productId))
-                .bodyValue(product)
+                .uri("/product-stock/%s/create".formatted(productId))
+                .bodyValue(productStock)
                 .retrieve()
                 .toEntity(String.class)
                 .block(timeout);
-    var getProduct = webClient.get()
-            .uri("/product/%s/get".formatted(productId))
+    var getProductStock = webClient.get()
+            .uri("/product-stock/%s/get".formatted(productId))
             .retrieve()
-            .toEntity(Product.class)
+            .toEntity(ProductStock.class)
             .block(timeout)
             .getBody();
-    assertEquals(product.name(),getProduct.name());
-    assertEquals(product.quantity(),getProduct.quantity());
+    assertEquals(productStock.quantity(),getProductStock.quantity());
   }
 }

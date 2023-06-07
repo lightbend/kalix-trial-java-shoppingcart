@@ -16,7 +16,7 @@
   <properties>
 
     <!-- TODO Update to your own Docker repository or Docker Hub scope -->
-    <dockerImage>my-docker-repo/${project.artifactId}</dockerImage>
+    <dockerImage>aklikic/${project.artifactId}</dockerImage>
     <dockerTag>${project.version}</dockerTag>
     <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
     <mainClass>com.example.shoppingcart.Main</mainClass>
@@ -24,7 +24,7 @@
     <jdk.target>17</jdk.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <kalix-sdk.version>1.2.0</kalix-sdk.version>
+    <kalix-sdk.version>1.2.1</kalix-sdk.version>
   </properties>
 
   <build>
