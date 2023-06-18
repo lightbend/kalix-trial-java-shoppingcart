@@ -1,4 +1,4 @@
-# Try next with this example:
+# Try next with this example: 
 ## [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
 ## [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
 # Kalix Trial - eCommerce - Java
