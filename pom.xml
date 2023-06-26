@@ -16,7 +16,7 @@
   <properties>
 
     <!-- TODO Update to your own Docker repository or Docker Hub scope -->
-    <dockerImage>aklikic/${project.artifactId}</dockerImage>
+    <dockerImage>my-docker-repo/${project.artifactId}</dockerImage>
     <dockerTag>${project.version}</dockerTag>
     <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
     <mainClass>com.example.shoppingcart.Main</mainClass>
