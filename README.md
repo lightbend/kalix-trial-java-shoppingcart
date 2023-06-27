@@ -1,6 +1,14 @@
-# Try next with this example:
-## [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
-## [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
+# Prerequisite
+Java 17 or later<br>
+Maven 3.6 or later<br>
+Docker 20.10.14 or higher (to run locally)<br>
+# Introduction
+
+If you are continuing the journey from [Explore Kalix Virtually]() and want the use case locally and/or deploy to Kalix Platform continue with these topics:
+- [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
+- [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
+
+If you want to evaluate the Kalix developer experience locally as done in the [Explore Kalix Virtually]() we suggest you follow the instructions from the beginning and to build your own project.    
 # Kalix Trial - eCommerce - Java
 ## Designing Kalix Services
 ### Use case 
@@ -74,10 +82,6 @@ Kalix provides other components that are not used in this use case and more deta
     Response (String): "OK"
 
 ## Kickstart Kalix development project
-### Prerequisite
-Java 17 or later<br>
-Maven 3.6 or later<br>
-Docker 20.10.14 or higher (to run locally)<br>
 ### Kalix Maven ArchType
 Kalix [Maven ArchType](https://maven.apache.org/archetype/index.html) generates a new Maven development project from Kalix template
 ### Create shopping cart Maven project from Kalix template 
