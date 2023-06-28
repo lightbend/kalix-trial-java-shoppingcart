@@ -1,6 +1,14 @@
-# Try next with this example:
-## [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
-## [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
+# Prerequisite
+Java 17 or later<br>
+Maven 3.6 or later<br>
+Docker 20.10.14 or higher (to run locally)<br>
+# Introduction
+
+If you have gone through the `Explore Kalix Virtaully` journey, you are all set to :
+- [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
+- [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
+
+However, if you would like to better understand the `Kalix Developer Experience` and how to build applications on Kalix, here is more details on the same-use.    
 # Kalix Trial - eCommerce - Java
 ## Designing Kalix Services
 ### Use case 
@@ -74,10 +82,6 @@ Kalix provides other components that are not used in this use case and more deta
     Response (String): "OK"
 
 ## Kickstart Kalix development project
-### Prerequisite
-Java 17 or later<br>
-Maven 3.6 or later<br>
-Docker 20.10.14 or higher (to run locally)<br>
 ### Kalix Maven ArchType
 Kalix [Maven ArchType](https://maven.apache.org/archetype/index.html) generates a new Maven development project from Kalix template
 ### Create shopping cart Maven project from Kalix template 
@@ -361,24 +365,37 @@ https://docs.kalix.io/setting-up/index.html#_1_install_the_kalix_cli
     ```
     kalix auth signup
     ```
-    **Note**: Following command will open a browser where registration information can be filled in
+    **Note**: Following command will open a browser where registration information can be filled in<br>
    2. Login
     ```
     kalix auth login
     ```
-    **Note**: Following command will open a browser where authentication approval needs to be provided
+    **Note**: Following command will open a browser where authentication approval needs to be provided<br>
 
    3. Create a project
     ```
     kalix projects new ecommerce --region=gcp-us-east1
     ```
-    **Note**: `gcp-is-east1` is currently the only available region for deploying trial projects. For non-trial projects you can select Cloud Provider and regions of your choice
+    **Note**: `gcp-is-east1` is currently the only available region for deploying trial projects. For non-trial projects you can select Cloud Provider and regions of your choice<br>
 
-   4. Authenticate local docker for pushing docker image to Kalix docker registry
+   4. Authenticate local docker for pushing docker image to `Kalix Container Registry (KCR)`
     ```
     kalix auth container-registry configure
     ```
-3. Deploy service in Kalix project:
+    **Note**: The command will output `Kalix Container Registry (KCR)` path that will be used to configure `dockerImage` in `pom.xml`<br>
+   5. Extract Kalix user `username`
+   ```
+   kalix auth current-login
+   ```
+   **Note**: The command will output Kalix user details and column `USERNAME` will be used to configure `dockerImage` in `pom.xml`<br>
+3. Configure `dockerImage` path in `pom.xml`
+Replace `my-docker-repo` in `dockerImage` in `pom.xml` with: <br>
+`Kalix Container Registry (KCR)` path + `/` + `USERNAME` + `/ecommerce`<br>
+**Example** where `Kalix Container Registry (KCR)` path is `kcr.us-east-1.kalix.io` and `USERNAME` is `myuser`:<br>
+```
+<dockerImage>kcr.us-east-1.kalix.io/myuser/ecommerce/${project.artifactId}</dockerImage>
+```
+4. Deploy service in Kalix project:
  ```
 mvn deploy kalix:deploy
  ```
