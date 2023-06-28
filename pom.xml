@@ -16,8 +16,7 @@
   <properties>
 
     <!-- TODO Update to your own Docker repository or Docker Hub scope -->
-    <!--<dockerImage>my-docker-repo/${project.artifactId}</dockerImage>-->
-    <dockerImage>kcr.us-east-1.kalix.io/aklikiclb/ecommerce/${project.artifactId}</dockerImage>
+    <dockerImage>my-docker-repo/${project.artifactId}</dockerImage>
     <dockerTag>${project.version}</dockerTag>
     <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
     <mainClass>com.example.shoppingcart.Main</mainClass>
