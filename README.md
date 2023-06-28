@@ -374,7 +374,7 @@ https://docs.kalix.io/setting-up/index.html#_1_install_the_kalix_cli
 
    3. Create a project
     ```
-    kalix projects new ecommerce --region=gcp-us-east1
+    kalix projects new kalix-trial-java-ecommerce --region=gcp-us-east1
     ```
     **Note**: `gcp-is-east1` is currently the only available region for deploying trial projects. For non-trial projects you can select Cloud Provider and regions of your choice<br>
 
@@ -390,10 +390,10 @@ https://docs.kalix.io/setting-up/index.html#_1_install_the_kalix_cli
    **Note**: The command will output Kalix user details and column `USERNAME` will be used to configure `dockerImage` in `pom.xml`<br>
 3. Configure `dockerImage` path in `pom.xml`
 Replace `my-docker-repo` in `dockerImage` in `pom.xml` with: <br>
-`Kalix Container Registry (KCR)` path + `/` + `USERNAME` + `/ecommerce`<br>
+`Kalix Container Registry (KCR)` path + `/` + `USERNAME` + `/kalix-trial-java-ecommerce`<br>
 **Example** where `Kalix Container Registry (KCR)` path is `kcr.us-east-1.kalix.io` and `USERNAME` is `myuser`:<br>
 ```
-<dockerImage>kcr.us-east-1.kalix.io/myuser/ecommerce/${project.artifactId}</dockerImage>
+<dockerImage>kcr.us-east-1.kalix.io/myuser/kalix-trial-java-ecommerce/${project.artifactId}</dockerImage>
 ```
 4. Deploy service in Kalix project:
  ```
@@ -460,13 +460,3 @@ Result:
 ```
 "OK"
 ```
-
-
-
-
-
-
-
-
-
-
