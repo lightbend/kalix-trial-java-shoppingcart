@@ -4,11 +4,11 @@ Maven 3.6 or later<br>
 Docker 20.10.14 or higher (to run locally)<br>
 # Introduction
 
-If you are continuing the journey from [Explore Kalix Virtually]() and want the use case locally and/or deploy to Kalix Platform continue with these topics:
+If you have gone through the `Explore Kalix Virtaully` journey, you are all set to :
 - [Run locally in prod-like environment](#run-locally-in-prod-like-environment) <br>
 - [Deploy and run on Kalix Platform on Cloud Provider of your choice ](deploy-and-run-on-kalix-platform-on-cloud-provider-of-your-choice)
 
-If you want to evaluate the Kalix developer experience locally as done in the [Explore Kalix Virtually]() we suggest you follow the instructions from the beginning and to build your own project.    
+However, if you would like to better understand the `Kalix Developer Experience` and how to build applications on Kalix, here is more details on the same-use.    
 # Kalix Trial - eCommerce - Java
 ## Designing Kalix Services
 ### Use case 
