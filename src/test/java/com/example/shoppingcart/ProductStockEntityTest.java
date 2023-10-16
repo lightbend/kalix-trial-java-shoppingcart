@@ -18,8 +18,8 @@ public class ProductStockEntityTest {
 
         ValueEntityResult<String> res = testKit.call(entity -> entity.create(productStock));
         assertFalse(res.isError());
-        assertEquals("OK",res.getReply());
-        ProductStock persistedProductStock = (ProductStock)res.getUpdatedState();
-        assertEquals(productStock.quantity(),persistedProductStock.quantity());
+        assertEquals("OK", res.getReply());
+        ProductStock persistedProductStock = testKit.getState();
+        assertEquals(productStock.quantity(), persistedProductStock.quantity());
     }
 }
