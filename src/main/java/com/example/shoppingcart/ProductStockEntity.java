@@ -3,12 +3,14 @@ package com.example.shoppingcart;
 import io.grpc.Status;
 import kalix.javasdk.annotations.EntityKey;
 import kalix.javasdk.annotations.EntityType;
+import kalix.javasdk.annotations.Id;
+import kalix.javasdk.annotations.TypeId;
 import kalix.javasdk.valueentity.ValueEntity;
 import kalix.javasdk.valueentity.ValueEntityContext;
 import org.springframework.web.bind.annotation.*;
 
-@EntityKey("productId")
-@EntityType("product-stock")
+@Id("productId")
+@TypeId("product-stock")
 @RequestMapping("/product-stock/{productId}")
 public class ProductStockEntity extends ValueEntity<ProductStock>{
     private final String productId;
