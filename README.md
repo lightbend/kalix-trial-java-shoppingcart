@@ -90,7 +90,7 @@ Execute in command line:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kalix \
   -DarchetypeArtifactId=kalix-spring-boot-archetype \
-  -DarchetypeVersion=1.2.1
+  -DarchetypeVersion=1.3.3
 ```
 Use this setup:
 ```
@@ -128,13 +128,13 @@ public record ProductStock(Integer quantity){
 2. Add `productId` class parameter
 3. Add constructor for Kalix to inject `ValueEntityContext` from which `entityId` is used set `productId`
 4. Annotate `ProductStockEntity` class with spring web bind annotation `@RequestMapping` and configure path with `productId` as in-path parameter
-5. Annotate class with `@EntityKey("productId")` to configure entity key to `productId`
-6. Annotate class with `@EntityType("product-stock")` to assign reference name to the entity
+5. Annotate class with `@Id("productId")` to configure parameter `productId` as the entity key
+6. Annotate class with `@TypeId("product-stock")` to assign reference name to the entity
 7. Override `emptyState` method and return `empty` `ProductStock` value
 
 ```
-@EntityKey("productId")
-@EntityType("product-stock")
+@Id("productId")
+@TypeId("product-stock")
 @RequestMapping("/product-stock/{productId}")
 public class ProductStockEntity extends ValueEntity<ProductStock>{
     private final String productId;
@@ -156,8 +156,8 @@ public class ProductStockEntity extends ValueEntity<ProductStock>{
      - return: `ValueEntity.Effect`  with HTTP response data structure as an inner type
      - using spring web annotation mappings for REST method and path mapping (`@PostMapping`,...)
 ```
-@EntityKey("productId")
-@EntityType("product-stock")
+@Id("productId")
+@TypeId("product-stock")
 @RequestMapping("/product-stock/{productId}")
 public class ProductStockEntity extends ValueEntity<ProductStock>{
    private final String productId;
