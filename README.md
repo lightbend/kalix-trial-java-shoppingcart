@@ -90,7 +90,7 @@ Execute in command line:
 mvn archetype:generate \
   -DarchetypeGroupId=io.kalix \
   -DarchetypeArtifactId=kalix-spring-boot-archetype \
-  -DarchetypeVersion=1.3.3
+  -DarchetypeVersion=1.3.7
 ```
 Use this setup:
 ```
