@@ -374,7 +374,7 @@ https://docs.kalix.io/setting-up/index.html#_1_install_the_kalix_cli
 
    3. Create a project
     ```
-    kalix projects new kalix-trial-java-ecommerce --region=gcp-us-east1
+    kalix projects new kalix-trial-java-ecommerce --region=gcp-us-east1 --organization=my-organization
     ```
     **Note**: `gcp-is-east1` is currently the only available region for deploying trial projects. For non-trial projects you can select Cloud Provider and regions of your choice<br>
 
