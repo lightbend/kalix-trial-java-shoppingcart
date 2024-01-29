@@ -365,12 +365,12 @@ https://docs.kalix.io/kalix/install-kalix.html
     ```
     kalix auth signup
     ```
-    **Note**: Following command will open a browser where registration information can be filled in<br>
+    **Note**: The above command will open a browser where registration information can be filled in<br>
    2. Login
     ```
     kalix auth login
     ```
-    **Note**: Following command will open a browser where authentication approval needs to be provided<br>
+    **Note**: The above command will open a browser where authentication approval needs to be provided<br>
 
    3. Check your organization name
    ```
@@ -395,7 +395,7 @@ https://docs.kalix.io/kalix/install-kalix.html
    kalix auth current-login
    ```
    **Note**: The command will output Kalix user details and column `USERNAME` will be used to configure `dockerImage` in `pom.xml`<br>
-   
+
 3. Configure `dockerImage` path in `pom.xml`
 Replace `my-docker-repo` in `dockerImage` in `pom.xml` with: <br>
 `Kalix Container Registry (KCR)` path + `/` + `USERNAME` + `/kalix-trial-java-ecommerce`<br>
