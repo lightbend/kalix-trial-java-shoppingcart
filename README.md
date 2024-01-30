@@ -359,35 +359,43 @@ Result:
 ```
 ### Deploy and run on Kalix Platform on Cloud Provider of your choice 
 1. Install Kalix CLI
-https://docs.kalix.io/setting-up/index.html#_1_install_the_kalix_cli
+https://docs.kalix.io/kalix/install-kalix.html
 2. Kalix CLI 
    1. Register (FREE)
     ```
     kalix auth signup
     ```
-    **Note**: Following command will open a browser where registration information can be filled in<br>
+    **Note**: The above command will open a browser where registration information can be filled in<br>
    2. Login
     ```
     kalix auth login
     ```
-    **Note**: Following command will open a browser where authentication approval needs to be provided<br>
+    **Note**: The above command will open a browser where authentication approval needs to be provided<br>
 
-   3. Create a project
-    ```
-    kalix projects new kalix-trial-java-ecommerce --region=gcp-us-east1
-    ```
-    **Note**: `gcp-is-east1` is currently the only available region for deploying trial projects. For non-trial projects you can select Cloud Provider and regions of your choice<br>
+   3. Check your organization name
+   ```
+   kalix organization list
+   ```
+   Execute the above command to view a list of organizations associated with your account. Find your organization name, likely the same as your username.
 
-   4. Authenticate local docker for pushing docker image to `Kalix Container Registry (KCR)`
+   4. Create a project
+    ```
+    kalix projects new kalix-trial-java-ecommerce --region=gcp-us-east1 --organization=your-organization-name
+    ```
+    For trial projects, provide `gcp-us-east1` as the region. Replace `your-organization-name` with your actual organization name obtained from the previous step.<br>
+
+   5. Authenticate local docker for pushing docker image to `Kalix Container Registry (KCR)`
     ```
     kalix auth container-registry configure
     ```
     **Note**: The command will output `Kalix Container Registry (KCR)` path that will be used to configure `dockerImage` in `pom.xml`<br>
-   5. Extract Kalix user `username`
+
+   6. Extract Kalix user `username`
    ```
    kalix auth current-login
    ```
    **Note**: The command will output Kalix user details and column `USERNAME` will be used to configure `dockerImage` in `pom.xml`<br>
+
 3. Configure `dockerImage` path in `pom.xml`
 Replace `my-docker-repo` in `dockerImage` in `pom.xml` with: <br>
 `Kalix Container Registry (KCR)` path + `/` + `USERNAME` + `/kalix-trial-java-ecommerce`<br>
